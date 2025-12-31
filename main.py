@@ -1,24 +1,36 @@
 from chroma_setup import setup_chroma_db
 from rag_pipeline import create_rag_pipeline
 from evaluation import evaluate_rag_pipeline
+from config import Config
 
 # Constants
-CHROMA_PATH = "./data/chroma"
-FILE_PATHS = [
-    "./Sports-Essentials-Football-Coaching-Guide-2021.pdf",
-    "./PL_Handbook_25_26_07_10.pdf",
-    "./Basic_Football_Tactics-1.pdf"
-]
-EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
-MODEL_NAME = "meta-llama/Meta-Llama-3-8B"
-TOKENIZER_NAME = "meta-llama/Meta-Llama-3-8B"
-PROMPT_TEMPLATE = """You are a football tactics expert. Use only the information provided in the context below to answer the question. If the answer is not in the context, say \"I don't have enough information to answer that.\"\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:"""
+# this one is not in config cause I may need to experiment with that frequently
+PROMPT_TEMPLATE = """You are a football tactics expert.
+
+You MUST follow these rules:
+1. Use ONLY the information explicitly stated in the Context.
+2. If the Context does NOT contain the answer, output EXACTLY:
+   "I don't have enough information to answer that."
+3. If you output the sentence above, STOP. Do not add anything else.
+4. Do NOT use prior knowledge.
+5. Do NOT explain unless the answer is found in the Context.
+
+Context:
+{context}
+
+Question: {question}
+
+Answer:
+"""
+
+# Load configuration
+config = Config()
 
 # Setup Chroma DB
-db = setup_chroma_db(CHROMA_PATH, FILE_PATHS, EMBEDDING_MODEL_NAME)
+db = setup_chroma_db(config.CHROMA_PATH, config.FILE_PATHS, config.EMBEDDING_MODEL_NAME)
 
 # Create RAG Pipeline
-rag_pipeline = create_rag_pipeline(db, MODEL_NAME, TOKENIZER_NAME, PROMPT_TEMPLATE)
+rag_pipeline = create_rag_pipeline(db, config.MODEL_NAME, config.TOKENIZER_NAME, PROMPT_TEMPLATE)
 
 # Test Questions
 test_questions = [
