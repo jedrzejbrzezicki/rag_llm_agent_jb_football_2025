@@ -1,0 +1,8 @@
+CHROMA_PATH: "./data/chroma"
+FILE_PATHS:
+  - "./Sports-Essentials-Football-Coaching-Guide-2021.pdf"
+  - "./PL_Handbook_25_26_07_10.pdf"
+  - "./Basic_Football_Tactics-1.pdf"
+EMBEDDING_MODEL_NAME: "sentence-transformers/all-MiniLM-L6-v2"
+MODEL_NAME: "meta-llama/Meta-Llama-3-8B"
+TOKENIZER_NAME: "meta-llama/Meta-Llama-3-8B"
